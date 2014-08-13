@@ -1,4 +1,95 @@
-body {
-	margin: 0 0;
-	padding: 0 0;
+/*custom fonts*/
+
+@font-face {
+   font-family: Komika Axis;
+   src: url(KOMIKAX_.ttf);
+}
+
+@font-face {
+	font-family: Bebas Neue;
+	src: url(BebasNeue.otf);
+}
+
+/*fonts for elements*/
+
+h1 {
+	font-family: 'Bebas Neue', sans-serif;
+	text-align: center;
+	color: #000;
+	font-size: 3.5em;
+}
+
+input {
+	font-family: 'Komika Axis', sans-serif;
+	color: #000;
+	font-size: 4em;
+}
+
+.window-text {
+	font-family: 'Komika Axis', sans-serif;
+	color: #000;
+	font-size: 2em;
+	padding: 5px 5px;
+}
+
+.window-text:hover {
+	text-decoration: none;
+	color: #FF6F0D;
+}
+
+/*div containers*/
+
+#map-container {
+	width: 100%;
+	height: 700px;
+	margin: 0;
+	padding: 0;
+}
+
+#select-container {
+	width: 100%;
+	position: relative;
+	border-bottom: 5px solid #000;
+}
+
+/*logo*/
+
+img, .logo {
+	width: 60%;
+	margin-left: 20%;
+	display: inline-block;
+}
+
+/*custom styling*/
+
+.form-control {
+	font-size: 3em;
+	height: 80px;
+	color: #000;
+	display: inline-block;
+	border: none;
+	border-radius: 0px;
+	border-bottom: 5px solid #000;
+	box-shadow: none;
+}
+
+.form-control:hover {
+	color: #FF6F0D;
+}
+
+.form-control:focus {
+	border-color: #000;
+	box-shadow: none;
+}
+
+.btn-default {
+	font-family: 'Bebas Neue', sans-serif;
+	font-size: 2em;
+	border: none;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open>.dropdown-toggle.btn-default {
+	color: #FF6F0D;
+	background-color: #fff;
+	border-color: #fff;
 }
