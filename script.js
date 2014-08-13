@@ -18,33 +18,33 @@
 		window.location.search.replace('?', '').split('&').forEach(function(v){
 			var param = v.split('=');
 			params[param[0]] = param[1];
+			// console.log(param[1])
 		$('[name="'+ param[0] +'"]').val(param[1]);
-
 		});
 		
 		markers.forEach(function(marker) {
 			marker.setMap(null);
 		});
 		markers = [];
-	console.log(params);
+	// console.log(params);
 		$.ajax({
 			type: 'GET',
 			dataType: 'jsonp',
 			url: 'https://api.foursquare.com/v2/venues/search/?query=' + params.drink + '&near=' + params.location + '&client_id=' + foursquareClientId + '&client_secret=' + foursquareClientSecret + '&v=20140701',
 
 			success: function(response) {
-				console.log(response);
+				// console.log(response);
 				var locations = [];
 				response.response.venues.forEach(function(venue) {
 					locations.push([venue.location.lat, venue.location.lng]);
 				})
-				console.log(locations);
+				// console.log(locations);
 				var centre = GetCenterFromDegrees(locations);
 
 				bigMap.setCenter(new google.maps.LatLng(centre[0], centre[1]));
 
 				response.response.venues.forEach(function(venue) {
-					console.log(venue);
+					// console.log(venue);
 					
 					var venueMarker = new google.maps.Marker({
 						position: new google.maps.LatLng(venue.location.lat, venue.location.lng),
