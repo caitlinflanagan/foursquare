@@ -25,6 +25,12 @@ input {
 	font-size: 4em;
 }
 
+span {
+	font-family: 'Komika Axis', sans-serif;
+	color: #000;
+	font-size: 0.80em;
+}
+
 .window-text {
 	font-family: 'Komika Axis', sans-serif;
 	color: #000;
@@ -92,4 +98,18 @@ img, .logo {
 	color: #FF6F0D;
 	background-color: #fff;
 	border-color: #fff;
+}
+
+#back-to-top {
+	border-top: 5px solid #000;
+}
+
+#back-to-top h1:hover {
+	color: #FF6F0D;
+	text-decoration: none;
+	text-transform: none;
+}
+
+a:hover {
+	text-decoration: none;
 }
