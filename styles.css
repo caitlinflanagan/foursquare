@@ -2,12 +2,12 @@
 
 @font-face {
    font-family: Komika Axis;
-   src: url(KOMIKAX_.ttf);
+   src: url(fonts/KOMIKAX_.ttf);
 }
 
 @font-face {
 	font-family: Bebas Neue;
-	src: url(BebasNeue.otf);
+	src: url(fonts/BebasNeue.otf);
 }
 
 /*fonts for elements*/
