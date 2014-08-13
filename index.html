@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Smarty Pins</title>
+		<title>Drink Blank in Blank</title>
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="styles.css">
 		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -9,8 +9,22 @@
 		<script type="text/javascript" src="script.js"></script>
 	</head>
 	<body>
-		<div id="select-container">
-		</div>
+		<div id="select-container" class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<form class="drink">
+						<h1>DRINK</h1><input type="text" class="form-control" name="drink" value="Coffee">
+				</div>
+				<div class="col-md-4">
+					<img class="logo" src="images/logo-black.png">
+				</div>
+				<div class="col-md-4">
+						<h1>IN</h1><input type="text" class="form-control" name="location" value="Toronto">
+						<button type="button submit" class="btn btn-default" value="submit">SUBMIT</button>
+					</form>
+				</div>
+			</div>
+		</div>	
 		<div id="map-container">
 		</div>
 	</body>

@@ -1,82 +1,124 @@
   $(document).ready(function() {
-	var instagramClientId = 'd73fd06d0eb840b6ae6d2b983007a1b9';
+	var foursquareClientId = 'SKOR1HV5KVXDGHVKZJEJ1IUMV4ITN2PENSJZ2IMAUDJIG2RK';
+	var foursquareClientSecret = '4EZKQRMDYYCFKOE5UOVWVED1KVOXKQXJGAGR4FGIXE0DLY3R';
 	var mapContainer = $('#map-container')[0];
-	var centerOfToronto = new google.maps.LatLng(43.653226000000000000, -79.383184299999980000);
-	var theBigMap = new google.maps.Map(mapContainer, {
-		zoom: 16,
-		center: centerOfToronto,
-	}); //theBigMap variable
-	var markers = [];//step 1 for photo marker in different locations
+	var bigMap = new google.maps.Map(mapContainer, {
+		zoom: 13,
+		scrollwheel: false,
+	});
+	var markers = [];
 
 	console.log('document is ready');
-	searchPhotos(centerOfToronto); 
-	var openPhotoWindow = false;//start with all info windows closed
+	searchVenues(); 
+	var openVenueWindow = false;
 
-	google.maps.event.addListener(theBigMap, 'click', function(event) {
-		searchPhotos(event.latLng);
-	})//create new photo marker
+	function searchVenues(location) {
 
-	function searchPhotos(location) {
+		var params = {};
+		window.location.search.replace('?', '').split('&').forEach(function(v){
+			var param = v.split('=');
+			params[param[0]] = param[1];
+		$('[name="'+ param[0] +'"]').val(param[1]);
+
+		});
+		
 		markers.forEach(function(marker) {
 			marker.setMap(null);
 		});
 		markers = [];
+	console.log(params);
 		$.ajax({
 			type: 'GET',
 			dataType: 'jsonp',
-			url: 'https://api.instagram.com/v1/media/search?client_id=' + instagramClientId + '&lat=' + location.lat() + '&lng=' + location.lng(),
+			url: 'https://api.foursquare.com/v2/venues/search/?query=' + params.drink + '&near=' + params.location + '&client_id=' + foursquareClientId + '&client_secret=' + foursquareClientSecret + '&v=20140701',
+
 			success: function(response) {
-				response.data.forEach(function(photo) {
-					console.log(photo.location);
-					console.log(photo);
+				console.log(response);
+				var locations = [];
+				response.response.venues.forEach(function(venue) {
+					locations.push([venue.location.lat, venue.location.lng]);
+				})
+				console.log(locations);
+				var centre = GetCenterFromDegrees(locations);
+
+				bigMap.setCenter(new google.maps.LatLng(centre[0], centre[1]));
+
+				response.response.venues.forEach(function(venue) {
+					console.log(venue);
 					
-					var customPhotoMarker = {
-						    url: photo.user.profile_picture,
-						    scaledSize: new google.maps.Size(50, 50),
-						    origin: new google.maps.Point(0, 0),
-						    anchor: new google.maps.Point(0, -120)
-					};//customPhotoMarker variable
-					
-					var photoMarker = new google.maps.Marker({
-						position: new google.maps.LatLng(photo.location.latitude, photo.location.longitude),
-						map: theBigMap,
-						icon: customPhotoMarker,
-					});//photoMarker variable
-					markers.push(photoMarker);
+					var venueMarker = new google.maps.Marker({
+						position: new google.maps.LatLng(venue.location.lat, venue.location.lng),
+						map: bigMap,
+					});
+					markers.push(venueMarker);
 
-					var photoWindowContent = '';
-					photoWindowContent += '<a href="' 
-						+ photo.link 
-						+ '"><img class="insta-photo" src=' 
-						+ photo.images.low_resolution.url 
-						+ '/></a><p>Photo Courtesy of ' 
-						+ photo.user.full_name
-						+ ' (@' 
-						+ photo.user.username 
-						+ ')</p>';
-					if (photo.location.name) {
-						photoWindowContent += '<p>Photo Taken at '
-							+ photo.location.name
-							+ '</p>';
-					}//if statement for if the location name is available
+					var venueWindowContent = '';
+					venueWindowContent += '<a class="window-text" target="_blank" href="https://foursquare.com/v/' 
+						+ venue.id 
+						+ '">'
+						+ venue.name
+						+ '</a>';
 
-					var photoWindow = new google.maps.InfoWindow({
-						content: photoWindowContent,
-					});//photoWindow variable
+					var venueWindow = new google.maps.InfoWindow({
+						content: venueWindowContent,
+					});
 
-					google.maps.event.addListener(photoMarker, 'click', function(event) {
+					google.maps.event.addListener(venueMarker, 'click', function(event) {
 						console.log(event);
-						if (openPhotoWindow) {
-							openPhotoWindow.close()
+						if (openVenueWindow) {
+							openVenueWindow.close()
 						}
-						photoWindow.open(theBigMap, photoMarker);
-						theBigMap.setCenter(event.latLng);
-						openPhotoWindow = photoWindow;
+						venueWindow.open(bigMap, venueMarker);
+						bigMap.setCenter(event.latLng);
+						openVenueWindow = venueWindow;
 					});//event listener for click on marker
 				});//forEach function
 			},//success function
 		}); //ajax
-	};//searchPhotos function
+	};//searchVenues function
 });//document ready
 
-console.log('testing 1 2 3');
+/**
+ * Get a center latitude,longitude from an array of like geopoints
+ *
+ * @param array data 2 dimensional array of latitudes and longitudes
+ * For Example:
+ * $data = array
+ * (
+ *   0 = > array(45.849382, 76.322333),
+ *   1 = > array(45.843543, 75.324143),
+ *   2 = > array(45.765744, 76.543223),
+ *   3 = > array(45.784234, 74.542335)
+ * );
+*/
+function GetCenterFromDegrees($data)
+{
+    $num_coords = $data.length;
+
+    $X = 0.0;
+    $Y = 0.0;
+    $Z = 0.0;
+
+    $data.forEach(function($coord) {
+        $lat = $coord[0] * Math.PI / 180;
+        $lon = $coord[1] * Math.PI / 180;
+
+        $a = Math.cos($lat) * Math.cos($lon);
+        $b = Math.cos($lat) * Math.sin($lon);
+        $c = Math.sin($lat);
+
+        $X += $a;
+        $Y += $b;
+        $Z += $c;
+    });
+
+    $X /= $num_coords;
+    $Y /= $num_coords;
+    $Z /= $num_coords;
+
+    $lon = Math.atan2($Y, $X);
+    $hyp = Math.sqrt($X * $X + $Y * $Y);
+    $lat = Math.atan2($Z, $hyp);
+
+    return [$lat * 180 / Math.PI, $lon * 180 / Math.PI];
+}
