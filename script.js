@@ -2,10 +2,6 @@
 	var foursquareClientId = 'SKOR1HV5KVXDGHVKZJEJ1IUMV4ITN2PENSJZ2IMAUDJIG2RK';
 	var foursquareClientSecret = '4EZKQRMDYYCFKOE5UOVWVED1KVOXKQXJGAGR4FGIXE0DLY3R';
 	var mapContainer = $('#map-container')[0];
-	var bigMap = new google.maps.Map(mapContainer, {
-		zoom: 13,
-		scrollwheel: false,
-	});
 	var markers = [];
 
 	console.log('document is ready');
@@ -19,7 +15,7 @@
 			var param = v.split('=');
 			params[param[0]] = param[1];
 			// console.log(param[1])
-		$('[name="'+ param[0] +'"]').val(param[1]);
+			$('[name="'+ param[0] +'"]').val(param[1].replace('+', ' '));
 		});
 		
 		markers.forEach(function(marker) {
@@ -33,15 +29,19 @@
 			url: 'https://api.foursquare.com/v2/venues/search/?query=' + params.drink + '&near=' + params.location + '&client_id=' + foursquareClientId + '&client_secret=' + foursquareClientSecret + '&v=20140701',
 
 			success: function(response) {
-				// console.log(response);
+				console.log(response);
 				var locations = [];
+				if (response.meta.code != 200) return;
 				response.response.venues.forEach(function(venue) {
 					locations.push([venue.location.lat, venue.location.lng]);
 				})
 				// console.log(locations);
 				var centre = GetCenterFromDegrees(locations);
-
-				bigMap.setCenter(new google.maps.LatLng(centre[0], centre[1]));
+				var bigMap = new google.maps.Map(mapContainer, {
+					zoom: 13,
+					scrollwheel: false,
+					center: new google.maps.LatLng(centre[0], centre[1]),
+				});
 
 				response.response.venues.forEach(function(venue) {
 					// console.log(venue);
