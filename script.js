@@ -15,7 +15,7 @@
 			var param = v.split('=');
 			params[param[0]] = param[1];
 			// console.log(param[1])
-			$('[name="'+ param[0] +'"]').val(param[1].replace('+', ' '));
+			$('[name="'+ param[0] +'"]').val(decodeURIComponent(param[1].replace('+', ' ')));
 		});
 		
 		markers.forEach(function(marker) {
